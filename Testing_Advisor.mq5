@@ -8,8 +8,8 @@
 #property version   "1.00"
 
 #include <Trade\Trade.mqh>
-#include <generic/hashmap.mqh>
-#include <Dictionary.mqh>
+//#include <generic/hashmap.mqh>
+//#include <Dictionary.mqh>
 CTrade trade;
 
 int adx_indicator_handle, dmi_indicator_handle;
@@ -35,6 +35,11 @@ int indicator_customMA_H4_1,indicator_customMA_H4_2,indicator_customMA_H1_1,indi
 int indicator_customMA_M30_1,indicator_customMA_M30_2,indicator_customMA_M15_1,indicator_customMA_M15_2;
 int indicator_customMA_M5_1,indicator_customMA_M5_2;
 
+int indicator_Trending_Angle_H1_1, indicator_Trending_Angle_H4_1, indicator_Trending_Angle_M5_1, indicator_Trending_Angle_M15_1;
+int indicator_Trending_Angle_D1_1, indicator_Trending_Angle_MN1_1, indicator_Trending_Angle_M30_1;
+int indicator_Trending_Angle_H1_2, indicator_Trending_Angle_H4_2, indicator_Trending_Angle_M5_2, indicator_Trending_Angle_M15_2;
+int indicator_Trending_Angle_D1_2, indicator_Trending_Angle_MN1_2, indicator_Trending_Angle_M30_2;
+
 int indicator_handleRetests_H1, indicator_handleRetests_H4, indicator_handleRetests_D1, indicator_handleRetests_MN1 ;
 
 //+------------------------------------------------------------------+
@@ -49,6 +54,8 @@ int OnInit()
                                     );
    adx_indicator_handle_H4 = iCustom(Symbol(),PERIOD_H4,"Custom_ADX"
                                     );
+   adx_indicator_handle_M30 = iCustom(Symbol(),PERIOD_M30,"Custom_ADX"
+                                     );
    indicator_customMA_D1_1 = iCustom(Symbol(),PERIOD_D1,"Custom Moving Average_1",8);
    indicator_customMA_D1_2 = iCustom(Symbol(),PERIOD_D1,"Custom Moving Average_2",14);
    indicator_customMA_H4_1 = iCustom(Symbol(),PERIOD_H4,"Custom Moving Average_1",8);
@@ -75,10 +82,11 @@ int OnInit()
 //indicator_handlePivot_H4_vis_to_H1 = iCustom(Symbol(),PERIOD_H1,"pivot - H4",PERIOD_H4);
 
 //indicator_handlePTL_2_H1 = iCustom(Symbol(),PERIOD_H1,"PTL (2)");
+   indicator_handlePTL_2_M5 = iCustom(Symbol(),PERIOD_M5,"PTL (2)");
    indicator_handlePTL_2_M15 = iCustom(Symbol(),PERIOD_M15,"PTL (2)");
 //indicator_handlePTL_2_H1 = iCustom(Symbol(),PERIOD_H1,"PTL (2)");
    indicator_handlePTL_2_H4 = iCustom(Symbol(),PERIOD_H4,"PTL (2)");
-   indicator_handlePTL_2_D1 = iCustom(Symbol(),PERIOD_D1,"PTL (2)");
+//indicator_handlePTL_2_D1 = iCustom(Symbol(),PERIOD_D1,"PTL (2)");
 
 
    indicator_handleSupRes_H4 =iCustom(Symbol(),PERIOD_H4,"Support_and_Resistance");
@@ -96,10 +104,26 @@ int OnInit()
    indicator_handlePatterns_M30 = iCustom(Symbol(),PERIOD_M30,"patterns_on_chart");
 //iCustom(Symbol(),PERIOD_M5,"patterns_on_chart");
 
-   indicator_handleRetests_H1 = iCustom(Symbol(),PERIOD_H1,"shved_supply_and_demand_v1.4");
-   indicator_handleRetests_H4 = iCustom(Symbol(),PERIOD_M5,"shved_supply_and_demand_v1.4");
-   indicator_handleRetests_D1 = iCustom(Symbol(),PERIOD_D1,"shved_supply_and_demand_v1.4");
-   indicator_handleRetests_MN1 = iCustom(Symbol(),PERIOD_MN1,"shved_supply_and_demand_v1.4");
+//indicator_handleRetests_H1 = iCustom(Symbol(),PERIOD_H1,"shved_supply_and_demand_v1.4");
+   indicator_handleRetests_H4 = iCustom(Symbol(),PERIOD_H4,"shved_supply_and_demand_v1.4");
+//indicator_handleRetests_D1 = iCustom(Symbol(),PERIOD_D1,"shved_supply_and_demand_v1.4");
+//indicator_handleRetests_MN1 = iCustom(Symbol(),PERIOD_MN1,"shved_supply_and_demand_v1.4");
+
+
+   indicator_Trending_Angle_H1_1 = iCustom(Symbol(),PERIOD_H1,"s_rind_D",4,300,30,70,13.0);
+//indicator_Trending_Angle_H1_2 = iCustom(Symbol(),PERIOD_H1,"s_rind_D_2",8,500,30,70,13.0);
+
+   indicator_Trending_Angle_M5_1 = iCustom(Symbol(),PERIOD_M5,"s_rind_D",4,300,30,70,13.0);
+//indicator_Trending_Angle_M5_2 = iCustom(Symbol(),PERIOD_M5,"s_rind_2",2,500,30,70,13.0);
+
+   indicator_Trending_Angle_H4_1 = iCustom(Symbol(),PERIOD_H4,"s_rind_D",4,300,30,70,13.0);
+//indicator_Trending_Angle_H4_2 = iCustom(Symbol(),PERIOD_H4,"s_rind_2",8,500,30,70,13.0);
+
+   indicator_Trending_Angle_D1_1 = iCustom(Symbol(),PERIOD_D1,"s_rind_D",4,300,30,70,13.0);
+//indicator_Trending_Angle_D1_2 = iCustom(Symbol(),PERIOD_D1,"s_rind_D_2",8,500,30,70,13.0);
+
+   indicator_Trending_Angle_MN1_1 = iCustom(Symbol(),PERIOD_MN1,"s_rind_D",4,300,30,70,13.0);
+//indicator_Trending_Angle_MN_2 = iCustom(Symbol(),PERIOD_MN1,"s_rind_D_2",8,500,30,70,13.0);
 
 //---
 
@@ -416,7 +440,7 @@ void RewardSystem(MqlRates &ratesCurr[])
 
 
 int Default_Entry_Confluences[25];
-int ConfluenceTeam[40];
+int ConfluenceTeam[50];
 string ConfluenceTeamDefinition[20];
 MqlRates rates[];
 
@@ -526,7 +550,7 @@ void Support_Resistance_Work(MqlRates &ratesCurr[])
      }
    else
      {
-      ConfluenceTeam[18] = 1;
+      ConfluenceTeam[18] = -1;
       ConfluenceTeamDefinition[15] = "/NA/";
      }
 //     ************ ^^CONFLUNCE DEFINITION^^ ***********   //
@@ -560,10 +584,11 @@ void Support_Resistance_Work(MqlRates &ratesCurr[])
 
 
 // PIVOT visible to the base Period check...
-   if(Pivot_Support_Resistance_Area_Check(indicator_handlePivot_H4_vis_to_M5,PERIOD_M5) == 11
+   if(
+      Pivot_Support_Resistance_Area_Check(indicator_handlePivot_H4_vis_to_M5,PERIOD_M5) == 11
       || Pivot_Support_Resistance_Area_Check(indicator_handlePivot_MN1_vis_to_M5,PERIOD_M5) == 11
       || Pivot_Support_Resistance_Area_Check(indicator_handlePivot_D1_vis_to_M5,PERIOD_M5) == 11
-     )
+   )
      {
       ConfluenceTeam[5] = 1;
      }
@@ -722,7 +747,7 @@ void Market_Structure_Work()
 // We could use the ADX indicator and/or MA price action
 
 // Checking Trending/Consolidation Status using ADX.
-   if(Market_Structure(adx_indicator_handle_H1) > 0)
+   if(Market_Structure(adx_indicator_handle_H1,PERIOD_H1) > 0)
      {
       // Means it is trending
       ConfluenceTeam[3] = 1;
@@ -736,33 +761,106 @@ void Market_Structure_Work()
       ConfluenceTeamDefinition[3]="CONSOLIDATING...H1";
      }
 
-   if(Market_Structure(adx_indicator_handle_D1) > 0)
+// Checks which direction it is trending
+   if(Market_Structure_2(adx_indicator_handle_H1, PERIOD_H1) == 1)
+     {
+      // Means it is trending Up
+      ConfluenceTeam[48] = 1;
+
+     }
+   else
+      if(Market_Structure_2(adx_indicator_handle_H1, PERIOD_H1) == 0)
+        {
+         // Means it is trending Down
+         ConfluenceTeam[48] = 0;
+
+        }
+      else
+        {
+         // Means it is ranging/consolidating
+         ConfluenceTeam[48] = -1;
+        }
+        
+
+// M30
+   if(Market_Structure(adx_indicator_handle_M30,PERIOD_M30) > 0)
      {
       // Means it is trending
-      ConfluenceTeam[22] = 1;
-      //ConfluenceTeamDefinition[3]="TRENDING...H1";
+      ConfluenceTeam[45] = 1;
 
      }
    else
      {
       // Means it is ranging/consolidating
-      ConfluenceTeam[22] = -1;
-      //ConfluenceTeamDefinition[3]="CONSOLIDATING...H1";
+      ConfluenceTeam[45] = -1;
      }
 
-   if(Market_Structure(adx_indicator_handle_H4) > 0)
+// Checks which direction it is trending
+   if(Market_Structure_2(adx_indicator_handle_M30, PERIOD_M30) == 1)
+     {
+      // Means it is trending Up
+      ConfluenceTeam[46] = 1;
+
+     }
+   else
+      if(Market_Structure_2(adx_indicator_handle_M30, PERIOD_M30) == 0)
+        {
+         // Means it is trending Down
+         ConfluenceTeam[46] = 0;
+
+        }
+      else
+        {
+         // Means it is ranging/consolidating
+         ConfluenceTeam[46] = -1;
+        }
+
+//   if(Market_Structure(adx_indicator_handle_D1) > 0)
+//     {
+//      // Means it is trending
+//      ConfluenceTeam[22] = 1;
+//      //ConfluenceTeamDefinition[3]="TRENDING...H1";
+//
+//     }
+//   else
+//     {
+//      // Means it is ranging/consolidating
+//      ConfluenceTeam[22] = -1;
+//      //ConfluenceTeamDefinition[3]="CONSOLIDATING...H1";
+//     }
+//
+// H4:
+   if(Market_Structure(adx_indicator_handle_H4, PERIOD_H4) > 0)
      {
       // Means it is trending
       ConfluenceTeam[23] = 1;
-      //ConfluenceTeamDefinition[3]="TRENDING...H1";
 
      }
    else
      {
       // Means it is ranging/consolidating
       ConfluenceTeam[23] = -1;
-      //ConfluenceTeamDefinition[3]="CONSOLIDATING...H1";
      }
+
+// Checks which direction it is trending
+   if(Market_Structure_2(adx_indicator_handle_H4,PERIOD_H4) == 1)
+     {
+      // Means it is trending Up
+      ConfluenceTeam[47] = 1;
+
+     }
+   else
+      if(Market_Structure_2(adx_indicator_handle_H4, PERIOD_H4) == 0)
+        {
+         // Means it is trending Down
+         ConfluenceTeam[47] = 0;
+
+        }
+      else
+        {
+         // Means it is ranging/consolidating
+         ConfluenceTeam[47] = -1;
+        }
 
 
    if(TrendLine_MarketStructure_PTL(indicator_handlePTL_2_H4) == 1)
@@ -802,6 +900,165 @@ void Market_Structure_Work()
          ConfluenceTeam[24] = -1;
          //ConfluenceTeamDefinition[12] = "NO-TREND";
         }
+
+// TRENDLINE MARKET STRUCTURE:
+   TrendLine_MarketStructure();
+
+
+  }
+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void TrendLine_MarketStructure()
+  {
+// Trendline Status:
+
+   Print("From trendlineMarket structure here: " + rates[1].close);
+   if(Trending_Angle(indicator_Trending_Angle_M5_1,PERIOD_M5,rates) == 1)
+     {
+      ConfluenceTeam[32] = 1;
+     }
+   else
+      if(Trending_Angle(indicator_Trending_Angle_M5_1,PERIOD_M5,rates) == 0)
+        {
+         ConfluenceTeam[32] = 0;
+
+        }
+      else
+        {
+         ConfluenceTeam[32] = -1;
+        }
+
+   if(Trending_Angle(indicator_Trending_Angle_H1_1,PERIOD_H1,rates) == 1)
+     {
+      ConfluenceTeam[41] = 1;
+     }
+   else
+      if(Trending_Angle(indicator_Trending_Angle_H1_1,PERIOD_H1,rates) == 0)
+        {
+         ConfluenceTeam[41] = 0;
+
+        }
+      else
+        {
+         ConfluenceTeam[41] = -1;
+        }
+
+   if(Trending_Angle(indicator_Trending_Angle_H4_1,PERIOD_H4,rates) == 1)
+     {
+      ConfluenceTeam[42] = 1;
+     }
+   else
+      if(Trending_Angle(indicator_Trending_Angle_H4_1,PERIOD_H4,rates) == 0)
+        {
+         ConfluenceTeam[42] = 0;
+
+        }
+      else
+        {
+         ConfluenceTeam[42] = -1;
+        }
+
+// Break of trendline structure on D1 Trendlines:
+   if(BreakStructureTrendline(indicator_Trending_Angle_D1_1,PERIOD_D1,rates) == 1)
+     {
+      ConfluenceTeam[33] = 1;
+     }
+   else
+      if(BreakStructureTrendline(indicator_Trending_Angle_D1_1,PERIOD_D1,rates) == 0)
+        {
+         ConfluenceTeam[33] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[33] = -1;
+        }
+
+// Break of trendline structure on H4 Trendlines:
+   if(BreakStructureTrendline(indicator_Trending_Angle_H4_1,PERIOD_H4,rates) == 1)
+     {
+      ConfluenceTeam[34] = 1;
+     }
+   else
+      if(BreakStructureTrendline(indicator_Trending_Angle_H4_1,PERIOD_H4,rates) == 0)
+        {
+         ConfluenceTeam[34] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[34] = -1;
+        }
+
+// Break of trendline structure on H1 Trendlines:
+   if(BreakStructureTrendline(indicator_Trending_Angle_H1_1,PERIOD_H1,rates) == 1)
+     {
+      ConfluenceTeam[35] = 1;
+     }
+   else
+      if(BreakStructureTrendline(indicator_Trending_Angle_H1_1,PERIOD_H1,rates) == 0)
+        {
+         ConfluenceTeam[35] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[35] = -1;
+        }
+
+// TrendLine Area Check: if price closed near the trendline or not
+   if(Trendline_AreaCheck(indicator_Trending_Angle_D1_1,PERIOD_D1,rates,170) == 1)
+     {
+      // Found on Support
+      ConfluenceTeam[36] = 1;
+     }
+   else
+      if(Trendline_AreaCheck(indicator_Trending_Angle_D1_1,PERIOD_D1,rates,170) == 0)
+        {
+         // Found on Resistance
+         ConfluenceTeam[36] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[36] = -1;
+        }
+// TrendLine Area Check: H4
+   if(Trendline_AreaCheck(indicator_Trending_Angle_H4_1,PERIOD_H4,rates,90) == 1)
+     {
+      // Found on Support
+      ConfluenceTeam[37] = 1;
+     }
+   else
+      if(Trendline_AreaCheck(indicator_Trending_Angle_H4_1,PERIOD_H4,rates,90) == 0)
+        {
+         // Found on Resistance
+         ConfluenceTeam[37] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[37] = -1;
+        }
+
+// TrendLine Area Check: H1
+   if(Trendline_AreaCheck(indicator_Trending_Angle_H1_1,PERIOD_H1,rates,50) == 1)
+     {
+      // Found on Support
+      ConfluenceTeam[38] = 1;
+     }
+   else
+      if(Trendline_AreaCheck(indicator_Trending_Angle_H1_1,PERIOD_H1,rates,50) == 0)
+        {
+         // Found on Resistance
+         ConfluenceTeam[38] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[38] = -1;
+        }
+
+
+
   }
 
 
@@ -900,7 +1157,18 @@ void Moving_AveragePrice_Action_Work(MqlRates &ratesCurr[])
       ConfluenceTeamDefinition[9] = "MA_M30_DOWN";
      }
 
-   if(MovingAverage_Near_Price(indicator_customMA_H1_1, indicator_customMA_H1_2, PERIOD_H1) > 0)
+// MA_PriceAction M5
+   if(MA_PriceAction(indicator_customMA_M5_1, indicator_customMA_M5_2,PERIOD_M5) == 1)
+     {
+      ConfluenceTeam[31] = 1;
+     }
+   else
+     {
+      ConfluenceTeam[31] =0;
+
+     }
+
+   if(MovingAverage_Near_Price(indicator_customMA_H1_1, indicator_customMA_H1_2, PERIOD_H1,100) > 0)
      {
       ConfluenceTeam[14] = 1;
       ConfluenceTeamDefinition[16] = "MA_NEAR";
@@ -911,7 +1179,10 @@ void Moving_AveragePrice_Action_Work(MqlRates &ratesCurr[])
       ConfluenceTeamDefinition[16] = "NO  MA_NEAR";
      }
 
-   if(MovingAverage_Near_Price(indicator_customMA_M5_1, indicator_customMA_M15_2, PERIOD_M5) > 0)
+
+
+
+   if(MovingAverage_Near_Price(indicator_customMA_M5_1, indicator_customMA_M5_2, PERIOD_M5,35) > 0)
      {
       ConfluenceTeam[15] = 1;
       //ConfluenceTeamDefinition[16] = "MA_NEAR";
@@ -923,6 +1194,69 @@ void Moving_AveragePrice_Action_Work(MqlRates &ratesCurr[])
      }
 //Comment("MACross: "+MA_Cross(indicator_customMA_M5_1, indicator_customMA_M5_2));
 //Comment("Status:   "+MovingAverage_Near_Price(indicator_customMA_H1_1, indicator_customMA_H1_2, PERIOD_H1));
+
+// Checking if the current candle rates[1].close is the first to close above/below the corresponding MA
+   if(MA_PriceActionFirstCandle(indicator_customMA_H4_1,indicator_customMA_H4_2,PERIOD_H4) == 1)
+     {
+      // First candle in H4 closing above MA price
+      ConfluenceTeam[39] = 1;
+     }
+   else
+      if(MA_PriceActionFirstCandle(indicator_customMA_H4_1,indicator_customMA_H4_2,PERIOD_H4) == 0)
+        {
+         // First candle in H4 closing below MA price
+         ConfluenceTeam[39] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[39] = -1;
+        }
+
+   if(MA_PriceActionFirstCandle(indicator_customMA_H1_1,indicator_customMA_H1_2,PERIOD_H1) == 1)
+     {
+      // First candle in H1 closing above MA price
+      ConfluenceTeam[40] = 1;
+     }
+   else
+      if(MA_PriceActionFirstCandle(indicator_customMA_H1_1,indicator_customMA_H1_2,PERIOD_H1) == 0)
+        {
+         // First candle in H1 closing below MA price
+         ConfluenceTeam[40] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[40] = -1;
+        }
+
+   if(MA_PriceActionCandleRetest(indicator_customMA_H1_1,indicator_customMA_H1_2,PERIOD_H1) == 1)
+     {
+      ConfluenceTeam[43] = 1;
+     }
+   else
+      if(MA_PriceActionCandleRetest(indicator_customMA_H1_1,indicator_customMA_H1_2,PERIOD_H1) == 0)
+        {
+         ConfluenceTeam[43] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[43] = -1;
+        }
+
+// H4
+   if(MA_PriceActionCandleRetest(indicator_customMA_H4_1,indicator_customMA_H4_2,PERIOD_H4) == 1)
+     {
+      ConfluenceTeam[44] = 1;
+     }
+   else
+      if(MA_PriceActionCandleRetest(indicator_customMA_H4_1,indicator_customMA_H4_2,PERIOD_H4) == 0)
+        {
+         ConfluenceTeam[44] = 0;
+        }
+      else
+        {
+         ConfluenceTeam[44] = -1;
+        }
+
 
   }
 //+------------------------------------------------------------------+
@@ -945,7 +1279,6 @@ double Price_Value(ENUM_TIMEFRAMES period)
 
 
 
-
 // Used by Strategy #3 for alternating trades between sell and buy.
 bool BUY_TRADE = true;
 bool SELL_TRADE = false;
@@ -957,7 +1290,8 @@ double Ask, Bid;
 //+------------------------------------------------------------------+
 void OnTick()
   {
-
+// Generating random values
+//int num = 1 + 10*MathRand()/32768; // 1-10
 
 
 // =======================  MA_Crossing ======================= //
@@ -970,6 +1304,7 @@ void OnTick()
    ArraySetAsSeries(rates,true);
    CopyRates(Symbol(),PERIOD_M5,0,Bars(Symbol(),PERIOD_M5),rates);
    RewardSystem(rates);
+
 
 
    Ask = NormalizeDouble(SymbolInfoDouble(_Symbol,SYMBOL_ASK),_Digits);
@@ -1029,6 +1364,10 @@ void OnTick()
 
    Market_Structure_Work();
 
+   int TradingZone = Trading_Zone(ConfluenceTeam[3],ConfluenceTeam[48],ConfluenceTeam[45],ConfluenceTeam[46],ConfluenceTeam[23],ConfluenceTeam[47]);
+
+
+
 
 
 //   for(int i=PositionsTotal(); i>=0; i--)
@@ -1065,6 +1404,9 @@ void OnTick()
    create_Default_Entry_Confluences();
 
 
+//Comment("MN1_Pivot_Area: "+ Default_Entry_Confluences[0]
+//        +"\nD1_PivotsArea: "+Default_Entry_Confluences[2]);
+   Comment("Trending Angle_M5: SLOW ONE: "+ConfluenceTeam[32]);
 
 //WriteData("testingFiles",25,Default_Entry_Confluences);
 // ======================= Entry Strategy ##1 ======================= //
@@ -1175,119 +1517,116 @@ void OnTick()
 
 
 
-   int strategyNum3 = Strategy_Num_3(ConfluenceTeam[7], ConfluenceTeam[0],ConfluenceTeam[15],1);
-//Comment("Patt: "+ConfluenceTeam[1]
-//        + "\n" + "MA_CRO: "+ConfluenceTeam[0]
-//        +"\n" + "NEAR_MA: " + ConfluenceTeam[15]
-//        +"\n SUPP-DEM: "+ ConfluenceTeam[13]
-//       );
-//Comment("Strategy ON/OFF: "+ Deal_EntryIn);
+   int strategyNum3 = Strategy_Num_3(ConfluenceTeam[1], ConfluenceTeam[0],ConfluenceTeam[16],ConfluenceTeam[17],ConfluenceTeam[31]);
+
 
 //             Next Big Problems to solve: Check if the checkSimilarity works well thorugh comments/printing. Does it really check if two strategies are the same ????? //
 //             Next Big Problems to solve: Is the reward system array really connected to the row numbers ??? Check please. After that, we can let it go wild. Woooooh
 
+
+
 // Situation 1: Trade up
-   if(strategyNum3 == 1)
-     {
-      //CancelOrder();
+//   if(strategyNum3 == 1)
+//     {
+//      //CancelOrder();
+//
+//
+//
+//      //VolumeValue_Buy[counter_OrderInfo_Buy] = Buying_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),
+//      //      Buying_SL(Supp_Zone_M5,0,0,0) // Volume
+//      //      ,Ask);
+//      //orderNumber_Status_Buy[counter_OrderInfo_Buy] = Ask;
+//      ////Print("Ask: "+ orderNumber_Status_Buy[counter_OrderInfo_Buy]);
+//      //Price_TP_Buy[counter_OrderInfo_Buy] =  Buying_TP(PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,0),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,1), // Take Profit
+//      //                                       PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,2),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,3)         // Take Profit
+//      //                                       , Buying_SL(Supp_Zone_M5,0,0,0)
+//      //                                       ,Ask);
+//      //Price_SL_Buy[counter_OrderInfo_Buy] = Buying_SL((Ask - 1*MathAbs(Ask - Supp_Zone_M5)),0,0,0);
+//      //orderNumber_Status_Buy[counter_OrderInfo_Buy] = trans.order;
+//
+//      // Price Line
+//      //ObjectCreate(0,DoubleToString(orderNumber_Status_Buy[counter_OrderInfo_Buy]),OBJ_HLINE,0,0,orderNumber_Status_Buy[counter_OrderInfo_Buy]);
+//      //ObjectSetInteger(0,DoubleToString(orderNumber_Status_Buy[counter_OrderInfo_Buy]),OBJPROP_COLOR,clrGray);
+//      //ObjectSetInteger(0,DoubleToString(orderNumber_Status_Buy[counter_OrderInfo_Buy]),OBJPROP_STYLE,STYLE_DASHDOT);
+//      //// Take Profit Line
+//      //ObjectCreate(0,DoubleToString(Price_TP_Buy[counter_OrderInfo_Buy]),OBJ_HLINE,0,0,Price_TP_Buy[counter_OrderInfo_Buy]);
+//      //ObjectSetInteger(0,DoubleToString(Price_TP_Buy[counter_OrderInfo_Buy]),OBJPROP_COLOR,clrGreen);
+//      //ObjectSetInteger(0,DoubleToString(Price_TP_Buy[counter_OrderInfo_Buy]),OBJPROP_STYLE,STYLE_DASHDOT);
+//      //// Stop loss line
+//      //ObjectCreate(0,DoubleToString(Price_SL_Buy[counter_OrderInfo_Buy]),OBJ_HLINE,0,0, Price_SL_Buy[counter_OrderInfo_Buy]);
+//      //ObjectSetInteger(0,DoubleToString(Price_TP_Buy[counter_OrderInfo_Buy]),OBJPROP_COLOR,clrRed);
+//      //ObjectSetInteger(0, DoubleToString(Price_SL_Buy[counter_OrderInfo_Buy]),OBJPROP_STYLE,STYLE_DASHDOT);
+//
+//      //++counter_OrderInfo_Buy;
+//
+//      //ObjectSetInteger(0,name,OBJPROP_COLOR,Level_00_Color);
+//
+//      //if(PositionSelect(Symbol())==false)
+//      //  {
+//      trade.Buy(Buying_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),
+//                              Buying_SL(Supp_Zone_M5,0,0,0) // Volume
+//                              ,Ask), // Volume
+//                NULL,Ask,
+//                Buying_SL((Ask - 1*MathAbs(Ask - Supp_Zone_M5)),0,0,0),                   // Stop Loss
+//                Buying_TP(PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,0),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,1), // Take Profit
+//                          PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,2),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,3)         // Take Profit
+//                          , Buying_SL(Supp_Zone_M5,0,0,0)
+//                          ,Ask),"Entry #3");
+//
+//      //trade.Buy(1,Symbol(),Ask,(Ask - 1*MathAbs(Ask - Supp_Zone_M5)),(Ask + 2*MathAbs(Ask - Supp_Zone_M5)));
+//      BUY_TRADE = false;
+//      SELL_TRADE = true;
+//      //}
+//     }
+////else
+//// Situation 1: Trade down
+//   if(strategyNum3 == 0)
+//     {
+//      //CancelOrder();
+//      //VolumeValue_Sell[counter_OrderInfo_Sell] = Selling_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),Selling_SL(Resi_Zone_M5,0,0,0), // Volume to trade with
+//      //      Bid);
+//      //orderNumber_Status_Sell[counter_OrderInfo_Sell] = Bid;
+//      //Price_TP_Sell[counter_OrderInfo_Sell] =  Selling_TP(PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,0),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,4),
+//      //      PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,5),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,5), // Take Profit
+//      //      Selling_SL(Resi_Zone_M5,0,0,0)
+//      //      ,Bid);
+//      //Price_SL_Sell[counter_OrderInfo_Sell] = Selling_SL((Bid + 1*MathAbs(Resi_Zone_M5-Bid)),0,0,0);
+//      //orderNumber_Status_Sell[counter_OrderInfo_Sell] = trans.order;
+//
+//      // Price Line
+//      //ObjectCreate(0,DoubleToString(orderNumber_Status_Sell[counter_OrderInfo_Sell]),OBJ_HLINE,0,0,orderNumber_Status_Sell[counter_OrderInfo_Sell]);
+//      //ObjectSetInteger(0,DoubleToString(orderNumber_Status_Sell[counter_OrderInfo_Sell]),OBJPROP_COLOR,clrGray);
+//      //ObjectSetInteger(0,DoubleToString(orderNumber_Status_Sell[counter_OrderInfo_Sell]),OBJPROP_STYLE,STYLE_DASHDOT);
+//      //// Take Profit Line
+//      //ObjectCreate(0,DoubleToString(Price_TP_Sell[counter_OrderInfo_Sell]),OBJ_HLINE,0,0, Price_TP_Sell[counter_OrderInfo_Sell]);
+//      //ObjectSetInteger(0,DoubleToString(Price_TP_Sell[counter_OrderInfo_Sell]),OBJPROP_COLOR,clrRed);
+//      //ObjectSetInteger(0,DoubleToString(Price_TP_Sell[counter_OrderInfo_Sell]),OBJPROP_STYLE,STYLE_DASHDOT);
+//      //// Stop loss line
+//      //ObjectCreate(0,DoubleToString(Price_SL_Sell[counter_OrderInfo_Sell]),OBJ_HLINE,0,0, Price_SL_Sell[counter_OrderInfo_Sell]);
+//      //ObjectSetInteger(0,DoubleToString(Price_TP_Sell[counter_OrderInfo_Sell]),OBJPROP_COLOR,clrRed);
+//      //ObjectSetInteger(0, DoubleToString(Price_SL_Sell[counter_OrderInfo_Sell]),OBJPROP_STYLE,STYLE_DASHDOT);
+//
+//      //++counter_OrderInfo_Sell;
+//
+//      //if(PositionSelect(Symbol())==false)
+//      //  {
+//      trade.Sell(Selling_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),Selling_SL(Resi_Zone_M5,0,0,0), // Volume to trade with
+//                                Bid), NULL,Bid,
+//                 Selling_SL((Bid + 1*MathAbs(Resi_Zone_M5-Bid)),0,0,0),           // Stop Loss
+//                 Selling_TP(PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,0),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,4),
+//                            PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,5),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,5), // Take Profit
+//                            Selling_SL(Resi_Zone_M5,0,0,0)
+//                            ,Bid),"Entry #3");
+//
+//
+//      //trade.Sell(1,Symbol(),Bid,(Bid + 1*MathAbs(Resi_Zone_M5-Bid)),(Bid - 2*MathAbs(Bid - Resi_Zone_M5)));
+//      SELL_TRADE = false;
+//      BUY_TRADE = true;
+//      //}
+//     }
 
 
-
-      VolumeValue_Buy[counter_OrderInfo_Buy] = Buying_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),
-            Buying_SL(Supp_Zone_M5,0,0,0) // Volume
-            ,Ask);
-      orderNumber_Status_Buy[counter_OrderInfo_Buy] = Ask;
-      //Print("Ask: "+ orderNumber_Status_Buy[counter_OrderInfo_Buy]);
-      Price_TP_Buy[counter_OrderInfo_Buy] =  Buying_TP(PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,0),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,1), // Take Profit
-                                             PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,2),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,3)         // Take Profit
-                                             , Buying_SL(Supp_Zone_M5,0,0,0)
-                                             ,Ask);
-      Price_SL_Buy[counter_OrderInfo_Buy] = Buying_SL((Ask - 1*MathAbs(Ask - Supp_Zone_M5)),0,0,0);
-      //orderNumber_Status_Buy[counter_OrderInfo_Buy] = trans.order;
-
-      // Price Line
-      ObjectCreate(0,DoubleToString(orderNumber_Status_Buy[counter_OrderInfo_Buy]),OBJ_HLINE,0,0,orderNumber_Status_Buy[counter_OrderInfo_Buy]);
-      ObjectSetInteger(0,DoubleToString(orderNumber_Status_Buy[counter_OrderInfo_Buy]),OBJPROP_COLOR,clrGray);
-      ObjectSetInteger(0,DoubleToString(orderNumber_Status_Buy[counter_OrderInfo_Buy]),OBJPROP_STYLE,STYLE_DASHDOT);
-      // Take Profit Line
-      ObjectCreate(0,DoubleToString(Price_TP_Buy[counter_OrderInfo_Buy]),OBJ_HLINE,0,0,Price_TP_Buy[counter_OrderInfo_Buy]);
-      ObjectSetInteger(0,DoubleToString(Price_TP_Buy[counter_OrderInfo_Buy]),OBJPROP_COLOR,clrGreen);
-      ObjectSetInteger(0,DoubleToString(Price_TP_Buy[counter_OrderInfo_Buy]),OBJPROP_STYLE,STYLE_DASHDOT);
-      // Stop loss line
-      ObjectCreate(0,DoubleToString(Price_SL_Buy[counter_OrderInfo_Buy]),OBJ_HLINE,0,0, Price_SL_Buy[counter_OrderInfo_Buy]);
-      ObjectSetInteger(0,DoubleToString(Price_TP_Buy[counter_OrderInfo_Buy]),OBJPROP_COLOR,clrRed);
-      ObjectSetInteger(0, DoubleToString(Price_SL_Buy[counter_OrderInfo_Buy]),OBJPROP_STYLE,STYLE_DASHDOT);
-
-      ++counter_OrderInfo_Buy;
-
-      //ObjectSetInteger(0,name,OBJPROP_COLOR,Level_00_Color);
-
-      //if(PositionSelect(Symbol())==false)
-      //  {
-      //trade.Buy(Buying_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),
-      //                        Buying_SL(Supp_Zone_M5,0,0,0) // Volume
-      //                        ,Ask), // Volume
-      //          NULL,Ask,
-      //          Buying_SL((Ask - 1*MathAbs(Ask - Supp_Zone_M5)),0,0,0),                   // Stop Loss
-      //          Buying_TP(PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,0),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,1), // Take Profit
-      //                    PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,2),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,3)         // Take Profit
-      //                    , Buying_SL(Supp_Zone_M5,0,0,0)
-      //                    ,Ask),"Entry #3");
-
-      //trade.Buy(1,Symbol(),Ask,(Ask - 1*MathAbs(Ask - Supp_Zone_M5)),(Ask + 2*MathAbs(Ask - Supp_Zone_M5)));
-      BUY_TRADE = false;
-      SELL_TRADE = true;
-      //}
-     }
-//else
-// Situation 1: Trade down
-   if(strategyNum3 == 0)
-     {
-      //CancelOrder();
-      VolumeValue_Sell[counter_OrderInfo_Sell] = Selling_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),Selling_SL(Resi_Zone_M5,0,0,0), // Volume to trade with
-            Bid);
-      orderNumber_Status_Sell[counter_OrderInfo_Sell] = Bid;
-      Price_TP_Sell[counter_OrderInfo_Sell] =  Selling_TP(PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,0),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,4),
-            PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,5),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,5), // Take Profit
-            Selling_SL(Resi_Zone_M5,0,0,0)
-            ,Bid);
-      Price_SL_Sell[counter_OrderInfo_Sell] = Selling_SL((Bid + 1*MathAbs(Resi_Zone_M5-Bid)),0,0,0);
-      //orderNumber_Status_Sell[counter_OrderInfo_Sell] = trans.order;
-
-      // Price Line
-      ObjectCreate(0,DoubleToString(orderNumber_Status_Sell[counter_OrderInfo_Sell]),OBJ_HLINE,0,0,orderNumber_Status_Sell[counter_OrderInfo_Sell]);
-      ObjectSetInteger(0,DoubleToString(orderNumber_Status_Sell[counter_OrderInfo_Sell]),OBJPROP_COLOR,clrGray);
-      ObjectSetInteger(0,DoubleToString(orderNumber_Status_Sell[counter_OrderInfo_Sell]),OBJPROP_STYLE,STYLE_DASHDOT);
-      // Take Profit Line
-      ObjectCreate(0,DoubleToString(Price_TP_Sell[counter_OrderInfo_Sell]),OBJ_HLINE,0,0, Price_TP_Sell[counter_OrderInfo_Sell]);
-      ObjectSetInteger(0,DoubleToString(Price_TP_Sell[counter_OrderInfo_Sell]),OBJPROP_COLOR,clrRed);
-      ObjectSetInteger(0,DoubleToString(Price_TP_Sell[counter_OrderInfo_Sell]),OBJPROP_STYLE,STYLE_DASHDOT);
-      // Stop loss line
-      ObjectCreate(0,DoubleToString(Price_SL_Sell[counter_OrderInfo_Sell]),OBJ_HLINE,0,0, Price_SL_Sell[counter_OrderInfo_Sell]);
-      ObjectSetInteger(0,DoubleToString(Price_TP_Sell[counter_OrderInfo_Sell]),OBJPROP_COLOR,clrRed);
-      ObjectSetInteger(0, DoubleToString(Price_SL_Sell[counter_OrderInfo_Sell]),OBJPROP_STYLE,STYLE_DASHDOT);
-
-      ++counter_OrderInfo_Sell;
-
-      //if(PositionSelect(Symbol())==false)
-      //  {
-      //trade.Sell(Selling_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),Selling_SL(Resi_Zone_M5,0,0,0), // Volume to trade with
-      //                          Bid), NULL,Bid,
-      //           Selling_SL((Bid + 1*MathAbs(Resi_Zone_M5-Bid)),0,0,0),           // Stop Loss
-      //           Selling_TP(PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,0),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,4),
-      //                      PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,5),PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,5), // Take Profit
-      //                      Selling_SL(Resi_Zone_M5,0,0,0)
-      //                      ,Bid),"Entry #3");
-
-
-      //trade.Sell(1,Symbol(),Bid,(Bid + 1*MathAbs(Resi_Zone_M5-Bid)),(Bid - 2*MathAbs(Bid - Resi_Zone_M5)));
-      SELL_TRADE = false;
-      BUY_TRADE = true;
-      //}
-     }
-
-
-   Strategies_Inventories(strategyNum3);
+//Strategies_Inventories(strategyNum3);
 
 // For distributing rewards for each strategy out there.
 
@@ -1316,16 +1655,166 @@ void OnTick()
 //      //fileReading("BuyCategoryInvetory.bin");
 //     }
 
-//if(PositionsTotal() == 0)
-//  {
-//   ResetOrdersInfo();
-//  }
-   Comment("counter_OrderInfo_Sell: "+counter_OrderInfo_Sell
-           +"\ncounter_OrderInfo_Buy: "+counter_OrderInfo_Buy
-           +"\nrowNumberPosition_SellCounter: "+rowNumberPosition_SellCounter
-           +"\nrowNumberPosition_BuyCounter: "+rowNumberPosition_BuyCounter);
+
+
+
+
+// ======================= Entry Strategy ##4 ======================= //
+
+// This straetgy uses the Pivot Buffer prices in order to trade each time the price gets very near it.
+   bool strategyNum4 = Strategy_Num_4(rates,PERIOD_D1,ConfluenceTeam[3]);
+   if(strategyNum4 == true)
+     {
+      // TRADE:
+
+      // Buy :
+      //trade.Buy(Buying_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),
+      //                        Buying_SL(Supp_Zone_M5,Strategy_Num_4_SL_Possibilities("Buy",rates,Ask),0,0) // Volume
+      //                        ,Ask), // Volume
+      //          NULL,Ask,
+      //          Buying_SL(Supp_Zone_M5,Strategy_Num_4_SL_Possibilities("Buy",rates,Ask),0,0),                   // Stop Loss
+      //          Buying_TP(Strategy_Num_4_TP_Selection("Buy",rates,Ask),0,0,0        // Take Profit
+      //                    , Buying_SL(Supp_Zone_M5,Strategy_Num_4_SL_Possibilities("Buy",rates,Ask),0,0)
+      //                    ,Ask),"Entry #3");
+      //trade.Buy(Buying_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE), // Volume
+      //                        (Ask - 200*_Point)
+      //                        ,Ask)
+      //          ,Symbol(),Ask,(Ask - 200*_Point),(Ask + 520*_Point));
+
+      // Sell :
+      //trade.Sell(Selling_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),Selling_SL(Resi_Zone_M5,Strategy_Num_4_SL_Possibilities("Sell",rates,Bid),0,0), // Volume to trade with
+      //                          Bid), NULL,Bid,
+      //           Selling_SL(Resi_Zone_M5,Strategy_Num_4_SL_Possibilities("Sell",rates,Bid),0,0),           // Stop Loss
+      //           Selling_TP(Strategy_Num_4_TP_Selection("Sell",rates,Bid),0,0,0 // Take Profit
+      //                      , Selling_SL(Resi_Zone_M5,Strategy_Num_4_SL_Possibilities("Sell",rates,Bid),0,0)
+      //                      ,Bid),"Entry #3");
+      //trade.Sell(Selling_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),(Bid + 200*_Point), // Volume to trade with
+      //                          Bid)
+      //           ,Symbol(),Bid,(Bid + 200*_Point),(Bid - 520*_Point));
+
+      TRADE_OR_NOT = false;
+     }
+
+
+   if(PositionsTotal() == 0)
+     {
+      TRADE_OR_NOT = true;
+     }
+//Comment("counter_OrderInfo_Sell: "+counter_OrderInfo_Sell
+//        +"\ncounter_OrderInfo_Buy: "+counter_OrderInfo_Buy
+//        +"\nrowNumberPosition_SellCounter: "+rowNumberPosition_SellCounter
+//        +"\nrowNumberPosition_BuyCounter: "+rowNumberPosition_BuyCounter);
+
+//int priceNearTrendline_D1, int priceNearTrendline_H4, int priceNearTrendline_H1,
+//                   int trendLineBreakStructure_D1, int trendLineBreakStructure_H4, int trendLineBreakStructure_H1,
+//                   int pivotAreaCheck_D1, int pivotAreaCheck_H4, int pivotAreaCheck_MN1,
+//                   int MA_PriceActionFirstCandle_H4, int MA_PriceActionFirstCandle_H1,
+//                   int MA_PriceActionCandleRetest_H4, int MA_PriceActionCandleRetest_H1,
+//                   int trendLine_H4, int trendlINE_H1,
+//                   int patterns_M5, int MA_PriceAction_M5
+//                   int tradeZone
+
+
+
+// ======================= Entry Strategy ##5 ======================= //
+
+
+
+   int strategyNum5 = Strategy_Num_5(ConfluenceTeam[36],ConfluenceTeam[37],ConfluenceTeam[38],
+                                     ConfluenceTeam[33],ConfluenceTeam[34],ConfluenceTeam[35],
+                                     ConfluenceTeam[14],ConfluenceTeam[15],ConfluenceTeam[13],
+                                     ConfluenceTeam[39],ConfluenceTeam[40],
+                                     ConfluenceTeam[44],ConfluenceTeam[43],
+                                     ConfluenceTeam[42],ConfluenceTeam[41],
+                                     ConfluenceTeam[1],ConfluenceTeam[31],TradingZone
+                                    );
+
+   int realCurrent_SL = PositionGetDouble(POSITION_SL);
+   int randNumber = 3 + 3*MathRand()/32768; // 3-5
+
+
+
+//   if(strategyNum5 == 1)
+//     {
+//      if(PositionSelect(Symbol())==false)
+//        {
+//
+//         trade.Buy(Buying_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE), // Volume
+//                                 Supp_Zone_M5
+//                                 ,Ask),Symbol(),Ask,Supp_Zone_M5,(Ask + randNumber*MathAbs(Ask - Supp_Zone_M5)),"StraT_5");
+//        }
+//
+//     }
+//   else
+//      if(strategyNum5 == 0)
+//        {
+//         if(PositionSelect(Symbol())==false)
+//           {
+//            trade.Sell(Selling_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),(Resi_Zone_M5), // Volume to trade with
+//                                      Bid)
+//                       ,Symbol(),Bid,Resi_Zone_M5,(Bid - randNumber*MathAbs(Bid - Resi_Zone_M5)),"StraT_5");
+//
+//           }
+//
+//        }
+
+//Comment("priceNearTrendline_D1,"+ConfluenceTeam[36]
+//        +"\n int priceNearTrendline_H4: "+ConfluenceTeam[37]
+//        +"\n int priceNearTrendline_H1: "+ConfluenceTeam[38]
+//        +"\nint trendLineBreakStructure_D1: "+ConfluenceTeam[33]
+//        +"\nint trendLineBreakStructure_H4: "+ConfluenceTeam[34]
+//        +"\nint trendLineBreakStructure_H1: "+ConfluenceTeam[35]
+//        +"\nMA retest_h1: "+ConfluenceTeam[43]
+//        +"\nMA retest_h4: "+ConfluenceTeam[44]
+//        +"\n price + 150*_Point AUDUSD = "+(rates[1].close + 150*_Point)
+//        +"\nrandNumber: "+randNumber
+//        +"\nCurrSl: "+PositionGetDouble(POSITION_SL)
+//        +"\nStrategyNum5: "+strategyNum5);
+
+
+
+
+
    Deal_EntryIn = false;
 
+
+
+
+// ======================= Entry Strategy ##0 ======================= //
+   int strategyNum0 = Strategy_Num_0(ConfluenceTeam[28],ConfluenceTeam[0],ConfluenceTeam[15],TradingZone);
+
+   Comment("MA_Crossover_H1: "+ConfluenceTeam[28]
+           +"MA_Crossover_M5: "+ConfluenceTeam[0]
+           +"\nTradingZone: "+TradingZone
+           +"\nADX_H1: "+ConfluenceTeam[3]
+           +"\nADX_H4: "+ConfluenceTeam[23]
+           +"\nDI_M30: "+ConfluenceTeam[46]
+           +"\nDI_H4: "+ConfluenceTeam[47]);
+
+   if(strategyNum0 == 1)
+     {
+      trade.Buy(Buying_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE), // Volume
+                              Supp_Zone_M5
+                              ,Ask),Symbol(),Ask,Supp_Zone_M5,(Ask + randNumber*MathAbs(Ask - Supp_Zone_M5)),"StraT_0");
+     }
+   else
+      if(strategyNum0 == 0)
+        {
+         trade.Sell(Selling_Volume(0.01*AccountInfoDouble(ACCOUNT_BALANCE),(Resi_Zone_M5), // Volume to trade with
+                                   Bid)
+                    ,Symbol(),Bid,Resi_Zone_M5,(Bid - randNumber*MathAbs(Bid - Resi_Zone_M5)),"StraT_0");
+        }
+
+
+
+   if(PositionSelect(Symbol())==true && PositionGetInteger(POSITION_TYPE) == 1)
+     {
+      changeSLSelling(PositionGetDouble(POSITION_SL),Support_and_Resistance_Prices(indicator_handleSupRes_H1,1,0));
+     }
+   if(PositionSelect(Symbol())==true && PositionGetInteger(POSITION_TYPE) == 0)
+     {
+      changeSLBuying(PositionGetDouble(POSITION_SL), Support_and_Resistance_Prices(indicator_handleSupRes_H1,1,1));
+     }
 
 //  ============================== Possibe CHAIN OF DECISION  ============================== //
 
@@ -1400,18 +1889,58 @@ void OnTick()
 //          );
    positionType = -1;
 
+// This is to prevent any gap after the weekend
+   CancelFridayOrders();
+
   }
+
+bool TRADE_OR_NOT = true;
 int positionType = -1;
+
+
 //+------------------------------------------------------------------+
-int Market_Structure(int indicator_customADX)
+//|                                                                  |
+//+------------------------------------------------------------------+
+int Trading_Zone(int ADX_H1, int DI_Status_H1, int ADX_M30, int DI_Status_M30, int ADX_H4, int DI_Status_H4)
+  {
+   if(ADX_H1 == 1)
+     {
+      if(DI_Status_H1 == 1)
+        {
+         return 1;
+        }
+      else
+         if(DI_Status_H1 == 0)
+           {
+            return 0;
+           }
+         else
+           {
+            return -1;
+           }
+     }
+   else
+     {
+      return -1;
+     }
+
+
+  }
+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int Market_Structure(int indicator_customADX, ENUM_TIMEFRAMES period)
   {
 //--- indicator buffers
-   double    ExtADXBuffer[];
-   double    ExtPDIBuffer[];
-   double    ExtNDIBuffer[];
-   double    ExtPDBuffer[];
-   double    ExtNDBuffer[];
-   double    ExtTmpBuffer[];
+   double    ExtADXBuffer[30];
+   double    ExtPDIBuffer[30];
+   double    ExtNDIBuffer[30];
+   double    ExtPDBuffer[30];
+   double    ExtNDBuffer[30];
+   double    ExtTmpBuffer[30];
 
    ArraySetAsSeries(ExtADXBuffer, true);
    ArraySetAsSeries(ExtNDBuffer, true);
@@ -1421,17 +1950,80 @@ int Market_Structure(int indicator_customADX)
    ArraySetAsSeries(ExtTmpBuffer, true);
 
    CopyBuffer(indicator_customADX,0,0,30,ExtADXBuffer);
-
+   CopyBuffer(indicator_customADX,1,0,30,ExtPDIBuffer);
+   CopyBuffer(indicator_customADX,2,0,30,ExtNDIBuffer);
+   Print("ExtNDBuffer vs ExtNDI: "+ExtNDBuffer[1]+" VS "+ExtNDIBuffer[1]+" vs adx: "+ExtADXBuffer[29]);
+//Market_Structure_2(indicator_customADX);
 //Comment("ExtADXBuffer[0]: "+ExtADXBuffer[0]);
-   if(ExtADXBuffer[0] > 21)
-     {
-      return 1;
-     }
-   else
+   Print("adx: "+ExtADXBuffer[29]+EnumToString(period));
+
+   if((ExtADXBuffer[29] > 20 && ExtPDIBuffer[1] > 20 && ExtNDIBuffer[1] > 20)
+      && (ExtADXBuffer[29] < 25 && ExtPDIBuffer[1] < 25 && ExtNDIBuffer[1] < 25))
      {
       return -1;
      }
+   else
+      if(ExtPDIBuffer[29] > 20 && ExtADXBuffer[29] > 21)
+        {
+         return 1;
+        }
+      else
+         if(ExtADXBuffer[29] > 21 && ExtNDIBuffer[29] > 20)
+           {
+            return 1;
+           }
+         else
+           {
+            return -1;
+           }
+
   }
+
+
+//+------------------------------------------------------------------+
+//| This method checks if DI+ and DI- have crossed or not            |
+//+------------------------------------------------------------------+
+int Market_Structure_2(int indicator_customADX, ENUM_TIMEFRAMES period)
+  {
+//--- indicator buffers
+   double    ExtADXBuffer[30];
+   double    ExtPDIBuffer[30];
+   double    ExtNDIBuffer[30];
+   double    ExtPDBuffer[30];
+   double    ExtNDBuffer[30];
+   double    ExtTmpBuffer[30];
+
+   ArraySetAsSeries(ExtADXBuffer, true);
+   ArraySetAsSeries(ExtNDBuffer, true);
+   ArraySetAsSeries(ExtPDBuffer, true);
+   ArraySetAsSeries(ExtNDIBuffer, true);
+   ArraySetAsSeries(ExtPDIBuffer, true);
+   ArraySetAsSeries(ExtTmpBuffer, true);
+
+   CopyBuffer(indicator_customADX,0,0,30,ExtADXBuffer);
+   CopyBuffer(indicator_customADX,1,0,30,ExtPDIBuffer);
+   CopyBuffer(indicator_customADX,2,0,30,ExtNDIBuffer);
+
+//Comment("ExtADXBuffer[0]: "+ExtADXBuffer[0]);
+   if(ExtPDIBuffer[29] > ExtNDIBuffer[29])
+     {
+      Print("CROSSED UP: "+EnumToString(period)+" "+ExtNDIBuffer[29]+" DI+: "+ExtPDIBuffer[29]+" adx: "+ExtADXBuffer[29]);
+      return 1;
+     }
+   else
+      if(ExtPDIBuffer[29] < ExtNDIBuffer[29])
+        {
+         Print("CROSSED DOWN: "+EnumToString(period)+" "+ExtNDIBuffer[29]+" DI+: "+ExtPDIBuffer[29]);
+         return 0;
+        }
+      else
+        {
+         Print("NOT YET: "+ExtNDIBuffer[1]+" DI+: "+ExtPDIBuffer[1]);
+         return -1;
+        }
+
+  }
+
 int counter_PivotPrice = 0;
 
 
@@ -1460,10 +2052,10 @@ double PivotBufferPrices(int indicator_handlePivot_R, ENUM_TIMEFRAMES period, in
    ArraySetAsSeries(S2Buffer,true);
    ArraySetAsSeries(S3Buffer,true);
 
-   CopyBuffer(indicator_handlePivot_R,0,0,50,PivotBuffer);
-   CopyBuffer(indicator_handlePivot_R,1,0,50,R1Buffer);
-   CopyBuffer(indicator_handlePivot_R,2,0,50,R2Buffer);
-   CopyBuffer(indicator_handlePivot_R,3,0,50,R3Buffer);
+  CopyBuffer(indicator_handlePivot_R,0,0,50,PivotBuffer);
+   CopyBuffer(indicator_handlePivot_R,1,0,50,R2Buffer);
+   CopyBuffer(indicator_handlePivot_R,2,0,50,R3Buffer);
+   CopyBuffer(indicator_handlePivot_R,3,0,50,R1Buffer);
    CopyBuffer(indicator_handlePivot_R,4,0,50,S1Buffer);
    CopyBuffer(indicator_handlePivot_R,5,0,50,S2Buffer);
    CopyBuffer(indicator_handlePivot_R,6,0,50,S3Buffer);
@@ -1513,6 +2105,31 @@ double PivotBufferPrices(int indicator_handlePivot_R, ENUM_TIMEFRAMES period, in
 
 
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double Support_and_Resistance_Prices(int indicator_handleSupRes_R, int index, int BuyOrSell)
+  {
+   double SupportBuffer[];
+   double ResiBuffer[];
+   ArraySetAsSeries(SupportBuffer,true);
+   ArraySetAsSeries(ResiBuffer, true);
+
+   CopyBuffer(indicator_handleSupRes_R,0,0,50,SupportBuffer);
+   CopyBuffer(indicator_handleSupRes_R,1,0,50,ResiBuffer);
+
+   if(BuyOrSell == 1)
+     {
+      return SupportBuffer[index];
+     }
+   else
+      if(BuyOrSell == 0)
+        {
+         return ResiBuffer[index];
+        }
+   return -1;
+
+  }
 
 
 
@@ -1563,8 +2180,106 @@ double PivotBufferPrices(int indicator_handlePivot_R, ENUM_TIMEFRAMES period, in
 //  }
 
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int Trending_Angle(int indicator_handleTrending_Angle_R, ENUM_TIMEFRAMES period, MqlRates &ratesCurr[])
+  {
+// Used by s_rind. Trendline
+   double support_DataTrendLine[20], resistance_DataTrendLine[20];
+   ArraySetAsSeries(support_DataTrendLine,true);
+   ArraySetAsSeries(resistance_DataTrendLine, true);
 
-//
+   CopyBuffer(indicator_handleTrending_Angle_R,0,0,20,support_DataTrendLine);
+   CopyBuffer(indicator_handleTrending_Angle_R,1,0,20,resistance_DataTrendLine);
+
+
+   if((resistance_DataTrendLine[10]-resistance_DataTrendLine[1]) < 0)
+     {
+      return 0;
+     }
+   else
+      if((support_DataTrendLine[10]-support_DataTrendLine[1]) > 0)
+        {
+         return 1;
+        }
+
+   return -1;
+  }
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int BreakStructureTrendline(int indicator_handleTrending_Angle_R, ENUM_TIMEFRAMES period, MqlRates &ratesCurr[]) // Break Of Structure Confluence:
+  {
+
+// Used by s_rind. Trendline
+   double support_DataTrendLine[20], resistance_DataTrendLine[20];
+   ArraySetAsSeries(support_DataTrendLine,true);
+   ArraySetAsSeries(resistance_DataTrendLine, true);
+
+   CopyBuffer(indicator_handleTrending_Angle_R,0,0,20,support_DataTrendLine);
+   CopyBuffer(indicator_handleTrending_Angle_R,1,0,20,resistance_DataTrendLine);
+
+// break of Support
+   if(support_DataTrendLine[19] > ratesCurr[1].close)
+     {
+      //BreakStrStatus = 0;
+      //Print("@@@@@@@@@@ Broken Down Down @@@@@@@@@@");
+      //Print("Broken Structure Down");
+      return 0;
+     }
+   else
+      if(resistance_DataTrendLine[19] < ratesCurr[1].close)
+        {
+         //BreakStrStatus = 1;
+         //Print("@@@@@@@@@@ Broken Up Up @@@@@@@@@@");
+         return 1;
+        }
+      else
+        {
+         //BreakStrStatus = -1;
+         return -1;
+        }
+
+
+  }
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int Trendline_AreaCheck(int indicator_handleTrendLine_R, ENUM_TIMEFRAMES period, MqlRates &ratesCurr[], int radiusArea)
+  {
+// Used by s_rind. Trendline
+   double support_DataTrendLine[20], resistance_DataTrendLine[20];
+   ArraySetAsSeries(support_DataTrendLine,true);
+   ArraySetAsSeries(resistance_DataTrendLine, true);
+
+   CopyBuffer(indicator_handleTrendLine_R,0,0,20,support_DataTrendLine);
+   CopyBuffer(indicator_handleTrendLine_R,1,0,20,resistance_DataTrendLine);
+
+   if(MathAbs(ratesCurr[1].close - resistance_DataTrendLine[19]) <= radiusArea*_Point)
+     {
+      // Get ready to go down, probably
+      return 0;
+     }
+   else
+      if(MathAbs(ratesCurr[1].close - support_DataTrendLine[19]) <= radiusArea*_Point)
+        {
+         // Get ready to go up, probably
+         return 1;
+        }
+      else
+        {
+         // The price isn't close from the trendline.
+         return -1;
+        }
+
+
+  }
+
+
 double PivotBufferPrices[51];
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -2020,6 +2735,78 @@ int MA_PriceAction(int indicator_customMA_1, int indicator_customMA_2, ENUM_TIME
 
 
 //+------------------------------------------------------------------+
+//|This method checks if the current candle is the first one closing above/below the MA price|
+//+------------------------------------------------------------------+
+int MA_PriceActionFirstCandle(int indicator_customMA_1, int indicator_customMA_2, ENUM_TIMEFRAMES period)
+  {
+// This method
+// This is made for Higher Timeframes.
+   double myMovingAverageArray_lowPer[];
+   double myMovingAverageArray_highPer[];
+   MqlRates curr_Rates[];
+   ArraySetAsSeries(curr_Rates,true);
+   CopyRates(Symbol(),period,0,Bars(Symbol(),period),curr_Rates);
+
+   ArraySetAsSeries(myMovingAverageArray_lowPer, true);
+   ArraySetAsSeries(myMovingAverageArray_highPer, true);
+
+   CopyBuffer(indicator_customMA_1,0,0,8,myMovingAverageArray_lowPer);
+   CopyBuffer(indicator_customMA_2,0,0,8,myMovingAverageArray_highPer);
+
+   if(curr_Rates[1].close > myMovingAverageArray_lowPer[1] && curr_Rates[2].close < myMovingAverageArray_lowPer[2])
+     {
+      return 1;
+     }
+   else
+      if(curr_Rates[1].close < myMovingAverageArray_lowPer[1] && curr_Rates[2].close > myMovingAverageArray_lowPer[2])
+        {
+         return 0;
+        }
+      else
+        {
+         return -1;
+        }
+
+  }
+
+//+------------------------------------------------------------------+
+//|This method checks if the current candle tried to close above/below MA, but it couldn't. It leaves behind a mark.
+//+------------------------------------------------------------------+
+int MA_PriceActionCandleRetest(int indicator_customMA_1, int indicator_customMA_2, ENUM_TIMEFRAMES period)
+  {
+// This method
+// This is made for Higher Timeframes.
+   double myMovingAverageArray_lowPer[];
+   double myMovingAverageArray_highPer[];
+   MqlRates curr_Rates[];
+   ArraySetAsSeries(curr_Rates,true);
+   CopyRates(Symbol(),period,0,Bars(Symbol(),period),curr_Rates);
+
+   ArraySetAsSeries(myMovingAverageArray_lowPer, true);
+   ArraySetAsSeries(myMovingAverageArray_highPer, true);
+
+   CopyBuffer(indicator_customMA_1,0,0,8,myMovingAverageArray_lowPer);
+   CopyBuffer(indicator_customMA_2,0,0,8,myMovingAverageArray_highPer);
+
+// If current candle tries to go above/below the MA, but fails and closes below/above the MA,
+// then that's a good indication.
+   if(curr_Rates[1].high > myMovingAverageArray_lowPer[1] && curr_Rates[1].close < myMovingAverageArray_lowPer[1])
+     {
+      return 0;
+     }
+   else
+      if(curr_Rates[1].low < myMovingAverageArray_lowPer[1] && curr_Rates[1].close > myMovingAverageArray_lowPer[1])
+        {
+         return 1;
+        }
+      else
+        {
+         return -1;
+        }
+
+  }
+
+//+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
 double Patterns_Up(int indicator_handlePatterns_R, int index)
@@ -2142,7 +2929,7 @@ int CheckNewBar(ENUM_TIMEFRAMES period_To_Use)
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int MovingAverage_Near_Price(int indicator_customMA_1, int indicator_customMA_2, ENUM_TIMEFRAMES period)
+int MovingAverage_Near_Price(int indicator_customMA_1, int indicator_customMA_2, ENUM_TIMEFRAMES period, int areaCheck)
   {
    double myMovingAverageArray_lowPer[];
    double myMovingAverageArray_highPer[];
@@ -2157,7 +2944,7 @@ int MovingAverage_Near_Price(int indicator_customMA_1, int indicator_customMA_2,
    CopyBuffer(indicator_customMA_1,0,0,8,myMovingAverageArray_lowPer);
    CopyBuffer(indicator_customMA_2,0,0,8,myMovingAverageArray_highPer);
 
-   if(MathAbs(ratesCurr[1].close - myMovingAverageArray_lowPer[1]) <= 100*_Point)
+   if(MathAbs(ratesCurr[1].close - myMovingAverageArray_lowPer[1]) <= areaCheck*_Point)
      {
       return 1;
      }
@@ -2241,6 +3028,27 @@ int Supply_Demand_Indicator(int indicator_handleRetests_R, MqlRates &ratesCurr[]
 
 
 bool priceBetweenPivot;
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int Strategy_Num_0(int MA_CrossOver_H1, int MA_Crossover_M5, int MA_NearPrice_M5, int TradeZone)
+  {
+   if(MA_Crossover_M5 == 1 && MA_NearPrice_M5 == 1 && TradeZone == 1)
+     {
+      return 1;
+     }
+   else
+      if(MA_Crossover_M5 == 0 && MA_NearPrice_M5 == 1 && TradeZone == 1)
+        {
+         return 0;
+        }
+      else
+        {
+         return -1;
+        }
+   return -1;
+  }
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -2358,27 +3166,414 @@ int Strategy_Num_2(int Supply_Demand_Area_Check, int Pivot_Area_Check_Confl, int
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
-int Strategy_Num_3(int patterns_Check_H1, int MA_Cross_M5, int MA_NearPrice_M5, int Supply_Demand_H1_aREA)
+int Strategy_Num_3(int Patterns_M5, int MA_Cross_M5, int PivotArea_MN1, int PivotArea_D1, int MA_PriceAction_M5)
   {
-//if(MA_NearPrice_M5 == 1 && Supply_Demand_H1_aREA == 1)
-//  {
-   if(MA_Cross_M5 == 1)
+
+   if(PivotArea_MN1 == 1 || PivotArea_D1 == 1)
      {
-      return 1;
+      if(Patterns_M5 == 1 && MA_PriceAction_M5 == 1)
+        {
+         return 1;
+        }
+      else
+         if(Patterns_M5 == 0 && MA_PriceAction_M5 == 0)
+           {
+            return 0;
+           }
+         else
+           {
+            return -1;
+           }
+
      }
    else
-      if(MA_Cross_M5 == 0)
+     {
+      return -1;
+     }
+
+//if(MA_Cross_M5 == 1 && PTL_H4 == 1)
+//  {
+//   return 1;
+//  }
+//else
+//   if(MA_Cross_M5 == 0 && PTL_H4 == 0)
+//     {
+//      return 0;
+//     }
+//   else
+//     {
+//      return -1;
+//     }
+
+
+  }
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+bool Strategy_Num_4(MqlRates &ratesCurr[], ENUM_TIMEFRAMES period, int ADX_H1)
+  {
+//MqlRates ratesCurr[];
+//ArraySetAsSeries(ratesCurr,true);
+// CopyRates(Symbol(),PERIOD_M5,0,Bars(Symbol(),PERIOD_M5),ratesCurr);
+
+   if(ADX_H1 == 1)
+     {
+      for(int i=0; i<7; i++)
         {
-         return 0;
+         if((ratesCurr[1].close >= (PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,i) - 20*_Point) &&
+             ratesCurr[1].close <= (PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,i) + 20*_Point))
+            //
+            //         (ratesCurr[1].close <= (PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,i) + 20*_Point)
+            //          && ratesCurr[1].open >=  (PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,i) - 20*_Point))
+           )
+           {
+
+            return true;
+           }
+        }
+     }
+
+   return false;
+  }
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double Strategy_Num_4_TP_Selection(string Buy_Or_Sell, MqlRates &ratesCurr[], double Bid_Or_Ask)
+  {
+   double PivotBufferPrices_Mix_H4_D1[14];
+   double Take_Profit_Choices_Buy[14];
+   double Take_Profit_Choices_Sell[14];
+   ArrayFill(Take_Profit_Choices_Buy,0,14,2000000);
+   ArrayFill(Take_Profit_Choices_Sell,0,14,2000000);
+
+// Mix the buffer prices into one Array;
+   for(int i=0; i<7; i++)
+     {
+      PivotBufferPrices_Mix_H4_D1[i] =  PivotBufferPrices(indicator_handlePivot_H4_vis_to_M5,PERIOD_H4,i);
+     }
+   for(int i=7; i<14; i++)
+     {
+      PivotBufferPrices_Mix_H4_D1[i] =PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,i-7);
+     }
+   ArraySort(PivotBufferPrices_Mix_H4_D1);
+   Print("MIX: ");
+   ArrayPrint(PivotBufferPrices_Mix_H4_D1);
+
+   if(Buy_Or_Sell == "Buy")
+     {
+      for(int i=0; i<14; i++)
+        {
+         if(Bid_Or_Ask < PivotBufferPrices_Mix_H4_D1[i])
+           {
+            Take_Profit_Choices_Buy[i] = PivotBufferPrices_Mix_H4_D1[i];
+           }
+
+
+        }
+     }
+   Print("TP_CHOICES_bUY: ");
+   ArrayPrint(Take_Profit_Choices_Buy);
+   if(Buy_Or_Sell == "Sell")
+     {
+      for(int i=0; i<14; i++)
+        {
+         if(Bid_Or_Ask > PivotBufferPrices_Mix_H4_D1[i])
+           {
+            Take_Profit_Choices_Sell[i] = PivotBufferPrices_Mix_H4_D1[i];
+           }
+
+        }
+     }
+   Print("TP_CHOICES_Sell: ");
+   ArrayPrint(Take_Profit_Choices_Sell);
+   return 0;
+  }
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+double Strategy_Num_4_SL_Possibilities(string Buy_Or_Sell, MqlRates &ratesCurr[], double Bid_Or_Ask)
+  {
+
+   double PivotBufferPrices_Mix_H4_D1[14];
+   double Stop_Loss_Choices_Buy[14];
+   double Stop_Loss_Choices_Sell[14];
+   ArrayFill(Stop_Loss_Choices_Buy,0,14,-1);
+   ArrayFill(Stop_Loss_Choices_Sell,0,14,-1);
+
+// Mix the buffer prices into one Array;
+   for(int i=0; i<7; i++)
+     {
+      PivotBufferPrices_Mix_H4_D1[i] = PivotBufferPrices(indicator_handlePivot_D1_vis_to_M5,PERIOD_D1,i);
+     }
+   for(int i=7; i<14; i++)
+     {
+      PivotBufferPrices_Mix_H4_D1[i] = PivotBufferPrices(indicator_handlePivot_H4_vis_to_M5,PERIOD_H4,i-7);
+     }
+   ArraySort(PivotBufferPrices_Mix_H4_D1);
+
+
+   if(Buy_Or_Sell == "Buy")
+     {
+      for(int i=0; i<14; i++)
+        {
+         if(Bid_Or_Ask > PivotBufferPrices_Mix_H4_D1[i])
+           {
+            Stop_Loss_Choices_Buy[i] = PivotBufferPrices_Mix_H4_D1[i];
+           }
+
+
+        }
+      //ArraySort(Stop_Loss_Choices_Buy);
+      //Print("SL_CHOICES_Buy: Sorted ");
+      //ArrayPrint(Stop_Loss_Choices_Buy);
+      //for(int i=0; i<14; i++)
+      //  {
+      //   if(Stop_Loss_Choices_Buy[i] > 0) {}
+      //{
+      Print("SL > 0:  "+Stop_Loss_Choices_Buy[0]);
+
+      ArrayPrint(Stop_Loss_Choices_Buy);
+
+      //}
+      //}
+     }
+   Print("SL_CHOICES_Buy: ");
+   ArrayPrint(Stop_Loss_Choices_Buy);
+   if(Buy_Or_Sell == "Sell")
+     {
+      for(int i=0; i<14; i++)
+        {
+         if(Bid_Or_Ask < PivotBufferPrices_Mix_H4_D1[i])
+           {
+            Stop_Loss_Choices_Sell[i] = PivotBufferPrices_Mix_H4_D1[i];
+           }
+
+        }
+
+      //for(int i=0; i<14; i++)
+      //  {
+      //   if(Stop_Loss_Choices_Sell[i] > 0)
+      //     {
+      Print("SL_Sell > 0:  "+Stop_Loss_Choices_Sell[0]);
+      //return Stop_Loss_Choices_Sell[0];
+      ArrayPrint(Stop_Loss_Choices_Sell);
+      //}
+
+
+      //}
+     }
+   Print("SL_CHOICES_Sell: ");
+   ArrayPrint(Stop_Loss_Choices_Sell);
+   return 0;
+  }
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+int Strategy_Num_5(int priceNearTrendline_D1, int priceNearTrendline_H4, int priceNearTrendline_H1,
+                   int trendLineBreakStructure_D1, int trendLineBreakStructure_H4, int trendLineBreakStructure_H1,
+                   int pivotAreaCheck_D1, int pivotAreaCheck_H4, int pivotAreaCheck_MN1,
+                   int MA_PriceActionFirstCandle_H4, int MA_PriceActionFirstCandle_H1,
+                   int MA_PriceActionCandleRetest_H4, int MA_PriceActionCandleRetest_H1,
+                   int trendLine_Status_H4, int trendLine_Status_H1,
+                   int patterns_M5, int MA_PriceAction_M5, int TradeZone)
+  {
+// The TradeZone checks if it is in the zone or not
+   if(TradeZone == 1)
+     {
+      // first trade breakdown: >>>
+      // Buy
+      if(priceNearTrendline_D1 == 1)
+        {
+         if(trendLineBreakStructure_H4 == 1)
+           {
+            if(trendLineBreakStructure_H1 == 1)
+              {
+               if(MA_PriceActionFirstCandle_H1 == 1 || MA_PriceActionCandleRetest_H1 == 1)
+                 {
+                  if(pivotAreaCheck_D1 == 1)
+                    {
+                     if(patterns_M5 == 1 && MA_PriceAction_M5 == 1)
+                       {
+                        return 1;
+                       }
+                    }
+                 }
+              }
+           }
+        }
+      // second trade breakdown: >>>
+      // Buy
+      if(priceNearTrendline_H4 == 1)
+        {
+         if(MA_PriceActionFirstCandle_H1 == 1 || MA_PriceActionCandleRetest_H1 == 1)
+           {
+            if(pivotAreaCheck_D1 == 1)
+              {
+               if(patterns_M5 == 1 && MA_PriceAction_M5 == 1)
+                 {
+                  return 1;
+                 }
+              }
+           }
+        }
+      // third trade breakdown: >>>
+      // Buy
+      if(MA_PriceActionFirstCandle_H4 == 1 || MA_PriceActionCandleRetest_H4 == 1)
+        {
+         if(priceNearTrendline_H1 == 1)
+           {
+            if(MA_PriceActionFirstCandle_H1 == 1 || MA_PriceActionCandleRetest_H1 == 1)
+              {
+               if(pivotAreaCheck_D1 == 1)
+                 {
+                  if(patterns_M5 == 1 && MA_PriceAction_M5 == 1)
+                    {
+                     return 1;
+                    }
+                 }
+              }
+           }
+        }
+      // fourth trade breakdown: >>>
+      // Buy
+      if(MA_PriceActionFirstCandle_H4 == 1 || MA_PriceActionCandleRetest_H4 == 1)
+        {
+         if(trendLineBreakStructure_H1 == 1)
+           {
+            if(pivotAreaCheck_D1 == 1)
+              {
+               if(patterns_M5 == 1 && MA_PriceAction_M5 == 1)
+                 {
+                  return 1;
+                 }
+              }
+           }
+        }
+      // fifth trade breakdown: >>>
+      // Buy
+      if(trendLineBreakStructure_H4 == 1)
+        {
+         if(trendLine_Status_H1 == 1 || trendLineBreakStructure_H1 == 1)
+           {
+            if(MA_PriceActionFirstCandle_H1 == 1 || MA_PriceActionCandleRetest_H1 == 1)
+              {
+               if(pivotAreaCheck_D1 == 1)
+                 {
+                  if(patterns_M5 == 1 && MA_PriceAction_M5 == 1)
+                    {
+                     return 1;
+                    }
+                 }
+              }
+           }
+
+        }
+     }
+   else
+      if(TradeZone == 0)
+        {
+         // first trade breakdown: >>>
+         // Sell
+         if(priceNearTrendline_D1 == 0)
+           {
+            if(trendLineBreakStructure_H4 == 0)
+              {
+               if(trendLineBreakStructure_H1 == 0)
+                 {
+                  if(MA_PriceActionFirstCandle_H1 == 0 || MA_PriceActionCandleRetest_H1 == 0)
+                    {
+                     if(pivotAreaCheck_D1 == 1)
+                       {
+                        if(patterns_M5 == 0 && MA_PriceAction_M5 == 0)
+                          {
+                           return 0;
+                          }
+                       }
+                    }
+                 }
+              }
+           }
+         // second trade breakdown: >>>
+         // Sell
+         if(priceNearTrendline_H4 == 0)
+           {
+            if(MA_PriceActionFirstCandle_H1 == 0 || MA_PriceActionCandleRetest_H1 == 0)
+              {
+               if(pivotAreaCheck_D1 == 1)
+                 {
+                  if(patterns_M5 == 0 && MA_PriceAction_M5 == 0)
+                    {
+                     return 0;
+                    }
+                 }
+              }
+           }
+         // third trade breakdown: >>>
+         // Sell
+         if(MA_PriceActionFirstCandle_H4 == 0 || MA_PriceActionCandleRetest_H4 == 0)
+           {
+            if(priceNearTrendline_H1 == 0)
+              {
+               if(MA_PriceActionFirstCandle_H1 == 0 || MA_PriceActionCandleRetest_H1 == 0)
+                 {
+                  if(pivotAreaCheck_D1 == 1)
+                    {
+                     if(patterns_M5 == 0 && MA_PriceAction_M5 == 0)
+                       {
+                        return 0;
+                       }
+                    }
+                 }
+              }
+           }
+         // fourth trade breakdown: >>>
+         // Sell
+         if(MA_PriceActionFirstCandle_H4 == 0 || MA_PriceActionCandleRetest_H4 == 0)
+           {
+            if(trendLineBreakStructure_H1 == 0)
+              {
+               if(pivotAreaCheck_D1 == 1)
+                 {
+                  if(patterns_M5 == 0 && MA_PriceAction_M5 == 0)
+                    {
+                     return 0;
+                    }
+                 }
+              }
+           }
+         // fifth trade breakdown: >>>
+         // Sell
+         if(trendLineBreakStructure_H4 == 0)
+           {
+            if(trendLine_Status_H1 == 0 || trendLineBreakStructure_H1 == 0)
+              {
+               if(MA_PriceActionFirstCandle_H1 == 0)
+                 {
+                  if(pivotAreaCheck_D1 == 1)
+                    {
+                     if(patterns_M5 == 0 && MA_PriceAction_M5 == 0)
+                       {
+                        return 0;
+                       }
+                    }
+                 }
+              }
+
+           }
+
         }
       else
         {
          return -1;
         }
-//}
 
 
-//return -1;
+
+   return -1;
+
   }
 
 
@@ -2423,6 +3618,7 @@ void CancelOrder()
 
          // Modify Stpo loss
          trade.PositionClose(PositionTicket);
+
          trade.PrintResult();
          //trade.
         }
@@ -2439,24 +3635,14 @@ double price_MA_Crossed = 0.0;
 //+------------------------------------------------------------------+
 double Buying_SL(double first_SL,double second_SL, double third_SL, double fourth_SL)
   {
-//if(first_SL < goldenMovingAverageArray[1] && first_SL < (price_MA_Crossed -20*_Point))
-//  {
-//   return (first_SL - 50*_Point);
-//  }
-//else
-//   if(second_SL < goldenMovingAverageArray[1] && second_SL < (price_MA_Crossed -20*_Point))
-//     {
-//      return (second_SL - 50*_Point);
-//     }
-//   else
-//      if(third_SL < goldenMovingAverageArray[1] && third_SL < (price_MA_Crossed -20*_Point))
-//        {
-//         return (third_SL - 50*_Point);
-//        }
-//      else
-//        {
-//         return (fourth_SL - 50*_Point);
-//        }
+
+   if(MathAbs(first_SL - rates[1].close) >= MathAbs(second_SL - rates[1].close))
+     {
+      second_SL - 45*_Point;
+     }
+
+
+
 // Minus 4.5 pips to the current SL
    return first_SL - 45*_Point;
 
@@ -2466,24 +3652,14 @@ double Buying_SL(double first_SL,double second_SL, double third_SL, double fourt
 //+------------------------------------------------------------------+
 double Selling_SL(double first_SL,double second_SL, double third_SL, double fourth_SL)
   {
-//if(first_SL > goldenMovingAverageArray[1] && first_SL > (price_MA_Crossed +20*_Point))
-//  {
-//   return (first_SL + 50*_Point);
-//  }
-//else
-//   if(second_SL > goldenMovingAverageArray[1] && second_SL > (price_MA_Crossed +30*_Point))
-//     {
-//      return (second_SL + 50*_Point);
-//     }
-//   else
-//      if(third_SL > goldenMovingAverageArray[1] && third_SL > (price_MA_Crossed +30*_Point))
-//        {
-//         return (third_SL + 50*_Point);
-//        }
-//      else
-//        {
-//         return (fourth_SL + 50*_Point);
-//        }
+//double PivotPrices_SL_Usage[7];
+//double Array_Stop_Losses[8];
+   if(MathAbs(first_SL - rates[1].close) >= MathAbs(second_SL - rates[1].close))
+     {
+      second_SL + 45*_Point;
+     }
+
+
 // Plus 4.5 pips to the current SL
    return first_SL + 45*_Point;
 
@@ -2882,6 +4058,7 @@ double Price_SL_Sell[21];
 double Price_TP_Sell[21];
 int counter_OrderInfo_Buy = 0;
 int counter_OrderInfo_Sell = 0;
+int Current_SL = 0;
 //+------------------------------------------------------------------+
 //|                                                                  |
 //+------------------------------------------------------------------+
@@ -2899,6 +4076,7 @@ void OnTradeTransaction(const MqlTradeTransaction& trans,
                   ,EnumToString(trans.deal_type),trans.order,trans.deal
                   ,EnumToString(deal_reason));
 
+      Current_SL = trans.price_sl;
 
       //      if(EnumToString(deal_entry) == "DEAL_ENTRY_IN")
       //        {
@@ -2995,8 +4173,53 @@ void OnTradeTransaction(const MqlTradeTransaction& trans,
      }
 
   }
-//+------------------------------------------------------------------+
 
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void TraillingStopLoss(double NewStopLoss)
+  {
+// desired stop loss
+
+   for(i=PositionsTotal(); i>=0; i--)
+     {
+      if(Symbol()==PositionGetSymbol(i))
+        {
+         // get ticket number
+         ulong PositionTicket = PositionGetInteger(POSITION_TICKET);
+
+
+         // Modify Stpo loss
+         trade.PositionModify(PositionTicket,NewStopLoss,PositionGetDouble(POSITION_TP));
+
+        }
+     }
+  }
+
+//+------------------------------------------------------------------+
+void changeSLSelling(double usualStopLoss, double newStopLoss)
+  {
+   if(usualStopLoss >= newStopLoss)
+     {
+      TraillingStopLoss(newStopLoss);
+     }
+
+  }
+
+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void changeSLBuying(double usualStopLoss, double newStopLoss)
+  {
+   if(usualStopLoss !=0 && usualStopLoss < newStopLoss)
+     {
+      TraillingStopLoss(newStopLoss);
+     }
+//TraillingStopLoss(newStopLoss);
+
+  }
 
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -3027,4 +4250,12 @@ int rowNumberPosition_SellCounter = 0;
 int orderNumberPosition_BuyCounter = 0;
 int orderNumberPosition_SellCounter = 0;
 bool Deal_EntryIn = true;
+//+------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+
 //+------------------------------------------------------------------+
