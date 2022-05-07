@@ -1,7 +1,7 @@
 - 👋 Hi, I’m @galileoChr
 - 👀 I’m interested in problem solving
 - 🌱 I’m currently learning Computer Science
-- 💞️ I’m looking to collaborate on anyth projects
+- 💞️ I’m looking to collaborate on any projects
 - 📫 How to reach me ...
 
 <!---
