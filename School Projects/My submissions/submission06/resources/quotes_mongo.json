@@ -1,0 +1,73 @@
+
+{
+    "_id":1,
+    "author": "Nelson Mandela",
+    "text": "The greatest glory in living lies not in never falling, but in rising every time we fall. ",
+    "adjective": "awesome"
+}
+{
+    "_id":2,
+    "author": "Mother Teresa",
+    "text": "Spread love everywhere you go. Let no one ever come to you without leaving happier. ",
+    "adjective": "caring"
+}
+{
+    "_id":3,
+    "author": "Robert Louis Stevenson",
+    "text": "Don't judge each day by the harvest you reap but by the seeds that you plant.",
+    "adjective": "patient"
+} 
+{
+    "_id":4,
+    "author": "Ralph Waldo Emerson",
+    "text": "Do not go where the path may lead, go instead where there is no path and leave a trail.",
+    "adjective": "bold"
+} 
+{
+    "_id":5,
+    "author": "Charles Dickens",
+    "text": "Life is made of ever so many partings welded together.",
+    "adjective": "strong"
+} 
+{
+    "_id":6,
+    "author": "Helen Keller",
+    "text": "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart.",
+    "adjective": "awesome"
+} 
+{
+    "_id":7,
+    "author": "Henry David Thoreau",
+    "text": "Go confidently in the direction of your dreams! Live the life you've imagined.",
+    "adjective": "confident"
+} 
+{
+    "_id":8,
+    "author": "Confucius",
+    "text": "Life is really simple, but we insist on making it complicated.",
+    "adjective": "simple"
+}
+{
+    "_id":9,
+    "author": "D. H. Lawrence",
+    "text": "Life is ours to be spent, not to be saved.",
+    "adjective": "outgoing"
+}
+{
+    "_id":10,
+    "author": "Dr. Seuss",
+    "text": "You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose.",
+    "adjective": "awesome"
+}
+{
+    "_id":11,
+    "author": "Ray Bradbury",
+    "text": "Life is trying things to see if they work.",
+    "adjective": "perseverant"
+}
+{
+    "_id":12,
+    "author": "Bob Marley",
+    "text": "Love the life you live. Live the life you love.",
+    "adjective": "living"
+}

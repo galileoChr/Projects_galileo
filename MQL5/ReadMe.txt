@@ -7,5 +7,5 @@ an open and close transaction can be done on my behalf. It's coded using MetaTra
 
 These are bots that can interact with various markets, especially Forex, with
 the intent to make profits through various trades along the day
-This project is still being developed, and it provided me with a chance to work with software that can interact
+This project is still being developed, and it provided me with a chance to work with software that can actually interact
 with live financial securities.

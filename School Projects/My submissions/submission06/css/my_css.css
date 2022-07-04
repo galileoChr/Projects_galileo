@@ -1,0 +1,41 @@
+/*my_css.css*/
+
+.quote {
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+.homePageImage {
+  width: 100%;
+}
+
+.body {
+  max-width: 750px;
+}
+
+.mySlides {
+  display: none;
+  width: 100%;
+}
+
+.myLabels {
+  display: none;
+}
+
+.error {
+  color: #F00;
+}
+
+/* The following styles were added for Amazing Stuff version 5: */
+table.item { border-spacing: 2px; } /* cellspacing */
+table.item th, table.item td { padding: 4px; } /* cellpadding */
+table.item { margin-bottom: 5px; }
+
+table.item th { border: 2px solid black; }
+table.item td { border: 2px solid black; }
+
+td.right { text-align: right; }
+td.left { text-align: left; }
+td.center { text-align: center; }
+
+  

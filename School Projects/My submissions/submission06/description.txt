@@ -1,0 +1,28 @@
+Submission 06
+Implementing Your Website's Shopping Cart and Checkout Features
+(and fixing any outstanding problems)
+
+Submission Description
+For this submission you will "complete" your website (at least as far as we are concerned) by implementing the Shopping Cart and Checkout features, and thus activating those links under e-store and on the Site Map page. And, of course, you will be expected to have fixed any outstanding issues that the marker has identified as needing fixing in your previous submissions.
+
+Once again, at the highest level, you have two things to consider: first, page display; and second; page functionality. And once again, you get to choose how you will display the Shopping Cart and Checkout pages, but you will have to implement the functionality comparable to that illustrated by the Amazing Stuff version 6 website or the Nature's Source website.
+
+Thus, you must proceed as follows for this final version of your website:
+
+The Shopping Cart and Checkout links under e-store (and on the Site Map page) must been activated.
+Choose how you want to display the Shopping Cart and Checkout pages.
+Study the final checklist (see below) for details on what the final version of your website must contain and how it must behave. All of this will be illustrated and discussed in class.
+Required File(s)
+In addition to all of the directories and files from version 5 of your website, this sixth and final version must also have the following additions/changes:
+
+New page files in your pages subdirectory for the shopping cart and checkout displays.
+New PHP script files in your scripts subdirectory for handling the shopping cart and checkout features.
+New files which may be just MySQL script files, or MySQL script files together with textfiles containing order and order item fields, depending on how you have handled that aspect of your setup.
+The usual readme.txt file, which on this occasion must contain, along with the usual content, a brief description of how you have handled the shopping cart and checkout displays and functionality if the files and displays do not follow the pattern shown by Amazing Stuff and/or Nature's Source.
+File Placement for Submission
+Submit the required directories and files by placing them in the submission06 subdirectory of the submissions subdirectory in the public_html directory of your personal Linux account u##, where the ?? are the last two digits in your Linux account username for this course.
+
+Remember to retain a copy outside the submission directory of anything you place in the submission06 directory. Also, ensure that there is nothing in the submission directory but the file(s) required for the submission.
+
+Additional Notes, Requirements, Specifications and/or Hints (if any)
+Your checkout script may be where you want to put any necessary "adjustment" code when the customer is finished "shopping" (adjusting the database quantities, for example) but there may well also be some "clean up" to be donce at the time of logout (removal of any "orphan" orders, for example) which may be best done at the time of logout rather than at the time of checkout, since the customer may checkout but still be logged in and proceed to do more shopping.
