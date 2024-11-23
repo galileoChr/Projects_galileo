@@ -65,8 +65,8 @@ If you have an idea or a project where you think I could contribute, feel free t
 
 ## 📫 Contact Me
 
-- [LinkedIn](https://www.linkedin.com/in/your-profile-link-here) 
-- Email: your-email@example.com
+- [LinkedIn](https://www.linkedin.com/in/christophe-manzi/) 
+- Email: chris.code.cm@gmail.com
 
 I'm always excited to connect with like-minded individuals and work together on meaningful projects.
 
