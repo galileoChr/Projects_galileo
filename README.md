@@ -1,4 +1,4 @@
-# 👋 Hi, I’m @galileoChr
+# 👋 Hi, I’m Chris
 
 ## About Me
 
